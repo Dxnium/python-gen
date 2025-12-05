@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asistente Académico Inteligente</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>🎓 Asistente de Orientación Académica</h1>
+        <p>Tu ruta hacia el éxito profesional, potenciada por IA y Lógica.</p>
+    </header>
+
+    <main>
+        <section id="user-section">
+            <h2>1. Identifícate</h2>
+            <div id="user-info">
+                <input type="text" id="user-name" placeholder="Ingresa tu nombre">
+                <button onclick="registerUser()">Iniciar Sesión / Registrar</button>
+            </div>
+            <p id="user-status" class="status-message"></p>
+        </section>
+
+        <section id="selection-section" class="hidden">
+            <h2>2. Selecciona tu Historial Académico</h2>
+            <p>Marca todos los cursos que has APROBADO hasta la fecha.</p>
+            
+            <div id="courses-list">
+                <p>Cargando cursos...</p>
+            </div>
+            
+            <button onclick="saveAndRecommend()" id="recommend-button" disabled>
+                Guardar Historial y Obtener Plan Académico
+            </button>
+        </section>
+
+        <section id="results-section" class="hidden">
+            <h2>3. Plan Académico Recomendado</h2>
+            <div id="recommendations-container">
+                </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Proyecto de Integración Lógica e IA</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

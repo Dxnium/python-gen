@@ -1,28 +1,9 @@
+# Proyecto
 
-# Project Title
+Este es un proyecto que utiliza las siguientes tecnologías:
 
-## Description
-Brief description of your project goes here.
-
-## Features
-- Feature 1
-- Feature 2
-- Feature 3
-
-## Installation
-```bash
-git clone <repository-url>
-cd project-name
-```
-
-## Usage
-```bash
-# Example command
-```
-
-## Requirements
-- Requirement 1
-- Requirement 2
-
-## License
-MIT License
+- **Python** - Backend y procesamiento de datos
+- **MongoDB** - Base de datos NoSQL
+- **Prolog** - Lógica y reglas
+- **Gemini** - Inteligencia artificial
+- **Vanilla JS** - Frontend sin frameworks
