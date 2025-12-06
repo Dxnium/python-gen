@@ -70,7 +70,10 @@ async function loadAvailableCourses(historial) {
         const isInHistorial = historial.includes(course.codigo);
         item.innerHTML = `
             <input type="checkbox" id="${course.codigo}" value="${course.codigo}" ${isInHistorial ? 'checked disabled' : ''}>
-            <label for="${course.codigo}">${course.codigo} - ${course.nombre}</label>
+            <div class="course-card>
+                <label for="${course.codigo}"><strong>${course.codigo}</strong> - ${course.nombre}</label>
+                <p class="requisitos"><strong>Requisitos:</strong> ${course.requisitos.length > 0 ? course.requisitos.join(', ') : 'Ninguno'}</p>
+            </div>
         `;
         coursesListDiv.appendChild(item);
     });
@@ -88,16 +91,11 @@ async function saveAndRecommend() {
     const approvedCourses = Array.from(document.querySelectorAll('#courses-list input:checked:not(:disabled)'))
                                .map(checkbox => checkbox.value);
 
-    if (approvedCourses.length === 0) {
-        alert('Por favor, selecciona al menos un curso aprobado.');
-        return;
-    }
-
     const resultsContainer = document.getElementById('recommendations-container');
     resultsContainer.innerHTML = 'Cargando recomendaciones... Esto puede tardar unos segundos (llamada a la IA)...';
     document.getElementById('results-section').classList.remove('hidden');
 
-    // GUARDAR LOS NUEVOS CURSOS UNO POR UNO (Se asume que es el historial completo del usuario)
+    // Guarda el historial aprobado en el backend
     for (const courseCode of approvedCourses) {
         await fetch(`${API_BASE_URL}/users/${userId}/historial?codigo_curso=${courseCode}`, {
             method: 'POST',
@@ -107,18 +105,17 @@ async function saveAndRecommend() {
 
     // OBTENER LAS RECOMENDACIONES DE LA BD/PROLOG/IA
     try {
-        const response = await fetch(`${API_BASE_URL}/recomendar_db`, {
-            method: 'POST',
+        const response = await fetch(`${API_BASE_URL}/users/${userId}/cursos_disponibles`, {
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ user_id: userId })
+            }
         });
 
         const data = await response.json();
         
-        if (response.ok && data.status === 'success') {
-            displayRecommendations(data.recomendaciones);
+        if (response.ok) {
+            displayRecommendations(data);
         } else {
             resultsContainer.innerHTML = `<p style="color: red;">Error en la recomendación: ${data.mensaje || response.statusText}</p>`;
         }
@@ -134,7 +131,10 @@ function displayRecommendations(recommendations) {
     container.innerHTML = '';
 
     if (recommendations.length === 0) {
-        container.innerHTML = '<p>¡Felicidades! Has completado todos los cursos elegibles o no hay rutas válidas con tus aprobados.</p>';
+        const card = document.createElement('div');
+        card.className = 'recommendation-card';
+        card.innerHTML = '<p>¡Felicidades! Has completado todos los cursos elegibles o no hay rutas válidas con tus aprobados.</p>';
+        container.appendChild(card);
         return;
     }
 
@@ -143,8 +143,36 @@ function displayRecommendations(recommendations) {
         card.className = 'recommendation-card';
         card.innerHTML = `
             <h3>${rec.nombre} (${rec.codigo})</h3>
-            <p><strong>Explicación de la IA:</strong> ${rec.explicacion_enriquecida}</p>
+            <p><strong>Créditos:</strong> ${rec.creditos}</p>
+            <p><strong>Área:</strong> ${rec.area}</p>
+            <p><strong>Nivel:</strong> ${rec.nivel}</p>
+            <p><strong>Requisitos:</strong> ${rec.requisitos.length > 0 ? rec.requisitos.join(', ') : 'Ninguno'}</p>
+            <p><strong>Explicación de la IA:</strong> ${rec.explicacion_ia}</p>
         `;
         container.appendChild(card);
+    });
+}
+
+function clearHistorial() {
+    if (!userId) {
+        alert('Error: Debes iniciar sesión primero.');
+        return;
+    }
+    fetch(`${API_BASE_URL}/users/${userId}/historial`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' } 
+    })
+    .then(response => {
+        if (response.ok) {
+            alert('Historial limpiado exitosamente.');
+            // Recargar la lista de cursos para reflejar el cambio
+            loadAvailableCourses([]);
+        } else {
+            alert('Error al limpiar el historial.');
+        }
+    })
+    .catch(error => {
+        alert('Error de red al intentar limpiar el historial.');
+        console.error('Error:', error);
     });
 }

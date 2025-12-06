@@ -2,4 +2,6 @@ fastapi[standard]
 uvicorn
 mongoengine
 pydantic
+pydantic-settings
 pyswip
+google-genai

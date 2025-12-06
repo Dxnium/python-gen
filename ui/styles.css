@@ -80,6 +80,9 @@ button:disabled {
 .hidden {
     display: none;
 }
+.requisitos{
+    font-size: 0.9em;
+}
 
 /* Estilos de resultados */
 .recommendation-card {
@@ -95,6 +98,26 @@ button:disabled {
 }
 .recommendation-card p {
     line-height: 1.6;
+}
+.sub-tittle-section{
+    display: flex;
+    margin-bottom: 15px;
+    align-items: center;
+    justify-content: space-between;
+}
+.btn-eliminar {
+    float: right;
+    background-color: #d9534f;
+    margin-left: 10px;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+     &:not(.disable):hover {
+        background-color: #c9302c;
+  } 
 }
 footer {
     width: 100%;

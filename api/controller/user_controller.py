@@ -1,8 +1,10 @@
 from fastapi import APIRouter, HTTPException
 from services.user_service import UserService
+from services.gemini_service import GeminiService
 
 router = APIRouter(prefix="/users", tags=["Users"])
 service = UserService()
+ai_service = GeminiService()
 
 @router.get("/")
 def list_users():
@@ -53,3 +55,25 @@ def get_user(user_id: str):
         "historial": [ h.codigo_curso for h in user.historial ]
     }
 
+@router.delete("/{user_id}/historial")
+def clear_historial(user_id: str):
+    success = service.clear_historial(user_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    return {"detail": "Historial limpiado"}
+
+@router.get("/{user_id}/cursos_disponibles")
+def get_cursos_disponibles(user_id: str):
+    user = service.get_user_with_historial(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    aprobados = [ h.codigo_curso for h in user.historial ]
+    cursos_disponibles = service.cursos_disponibles(aprobados)
+    for c in cursos_disponibles:
+        explicacion_ia = ai_service.generar_explicacion_ia(
+            nombre_curso=c["nombre"],
+            area=c["area"],
+            creditos=c["creditos"]
+        )
+        c["explicacion_ia"] = explicacion_ia
+    return cursos_disponibles

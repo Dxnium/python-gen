@@ -8,3 +8,6 @@ class CursosService:
 
         def list_cursos(self):
             return self.user_repo.obtener_todos_los_cursos()
+        
+        def cursos_disponibles(self):
+            return self.user_repo.obtener_cursos_disponibles()
