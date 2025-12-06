@@ -6,4 +6,4 @@ Este es un proyecto que utiliza las siguientes tecnologías:
 - **MongoDB** - Base de datos NoSQL
 - **Prolog** - Lógica y reglas
 - **Gemini** - Inteligencia artificial
-- **Vanilla JS** - Frontend sin frameworks
+- **Vanilla JS** - Frontend sin frameworksgi

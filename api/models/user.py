@@ -12,3 +12,17 @@ class User(Document):
 
     historial = EmbeddedDocumentListField(HistorialAcademico)
 
+    def to_json(self):
+        return {
+            "id": str(self.id),
+            "nombre": self.nombre,
+            "email": self.email,
+            "historial": [
+                {
+                    "id": str(h.id),
+                    "codigo_curso": h.codigo_curso
+                }
+                for h in self.historial
+            ]
+        }
+

@@ -1,5 +1,7 @@
 from repo.user_repository import UserRepository
 from repo.historial_repository import HistorialRepository
+from models.user import User
+from typing import List
 
 class UserService:
 
@@ -7,7 +9,10 @@ class UserService:
         self.user_repo = UserRepository()
         self.historial_repo = HistorialRepository()
 
-    def create_user(self, nombre: str, email: str, password: str):
+    def list_users(self) -> List[User]:
+        return self.user_repo.get_all()
+    
+    def create_user(self, nombre: str, email: str, password: str) -> User:
         return self.user_repo.create(nombre, email, password)
 
     def add_historial(self, user_id: str, codigo_curso: str):
