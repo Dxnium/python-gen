@@ -29,7 +29,6 @@ class UserService:
         return h
 
     def get_user_with_historial(self, user_id: str):
-        print("Fetching user with ID:", user_id, flush=True)
         return self.user_repo.get_by_id(user_id)
     
     def clear_historial(self, user_id: str) -> bool:

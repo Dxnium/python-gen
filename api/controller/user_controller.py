@@ -69,11 +69,4 @@ def get_cursos_disponibles(user_id: str):
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
     aprobados = [ h.codigo_curso for h in user.historial ]
     cursos_disponibles = service.cursos_disponibles(aprobados)
-    for c in cursos_disponibles:
-        explicacion_ia = ai_service.generar_explicacion_ia(
-            nombre_curso=c["nombre"],
-            area=c["area"],
-            creditos=c["creditos"]
-        )
-        c["explicacion_ia"] = explicacion_ia
     return cursos_disponibles

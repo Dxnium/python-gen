@@ -141,18 +141,51 @@ function displayRecommendations(recommendations) {
     recommendations.forEach(rec => {
         const card = document.createElement('div');
         card.className = 'recommendation-card';
+        card.id = `rec-${rec.codigo}`;
         card.innerHTML = `
             <h3>${rec.nombre} (${rec.codigo})</h3>
             <p><strong>Créditos:</strong> ${rec.creditos}</p>
             <p><strong>Área:</strong> ${rec.area}</p>
             <p><strong>Nivel:</strong> ${rec.nivel}</p>
             <p><strong>Requisitos:</strong> ${rec.requisitos.length > 0 ? rec.requisitos.join(', ') : 'Ninguno'}</p>
-            <p><strong>Explicación de la IA:</strong> ${rec.explicacion_ia}</p>
+            <button class="recommend-ai-button" onclick="generateAIRecommendation('${rec.nombre}', '${rec.area}', '${rec.creditos}', '${rec.codigo}')">Generar recomendación con IA</button>
         `;
         container.appendChild(card);
     });
 }
 
+function generateAIRecommendation(nombre_curso, area, creditos, codigo_curso) {
+    const button = document.querySelector(`#rec-${codigo_curso} .recommend-ai-button`);
+    button.disabled = true;
+    button.textContent = 'Generando recomendación con IA...';
+    fetch(`${API_BASE_URL}/cursos/recomendacion?nombre_curso=${nombre_curso}&area=${area}&creditos=${creditos}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.explicacion_ia) {
+            const card = document.getElementById(`rec-${codigo_curso}`);
+            const aiSection = document.createElement('div');
+            aiSection.className = 'ai-recommendation';
+            aiSection.innerHTML = `
+                <h4>Recomendación IA:</h4>
+                <p>${data.explicacion_ia}</p>
+            `;
+            card.appendChild(aiSection);
+        } else {
+            alert('Error al obtener la recomendación de IA.');
+        }
+    })
+    .catch(error => {
+        alert('Error de red al solicitar la recomendación de IA.');
+        console.error('Error:', error);
+    })
+    .finally(() => {
+        button.disabled = false;
+        button.textContent = 'Generar recomendación con IA';
+    });
+}
 function clearHistorial() {
     if (!userId) {
         alert('Error: Debes iniciar sesión primero.');

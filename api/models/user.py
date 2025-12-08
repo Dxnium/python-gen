@@ -1,4 +1,4 @@
-from mongoengine import Document, StringField, ListField, ObjectIdField, ReferenceField, EmbeddedDocumentListField
+from mongoengine import Document, StringField, EmbeddedDocumentListField
 from .historial import HistorialAcademico
 
 class User(Document):

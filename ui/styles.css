@@ -119,6 +119,19 @@ button:disabled {
         background-color: #c9302c;
   } 
 }
+.recommend-ai-button{
+    background-color: #4A90E2;
+    color: white;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+        transition: background-color 0.3s;
+     &:not(.disable):hover {
+        background-color: #357ABD;
+  } 
+}
 footer {
     width: 100%;
     text-align: center;
